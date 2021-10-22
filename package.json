@@ -1,0 +1,15 @@
+{
+  "name": "janktimestest",
+  "version": "1.0.0",
+  "description": "A simple test",
+  "main": "app.js",
+  "scripts": {
+    "test": "test",
+    "start": "node ./src/bot.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^4.4.2"
+  }
+}
