@@ -4,6 +4,11 @@ const token = "2065000283:AAGRq1ObTlb2NM-ObUVBL2438zjKXhklf2c";
 
 const bot = new Telegraf(token);
 
+bot.command("test", ctx => {
+    var resp = "You stoopid";
+    bot.telegram.sendMessage(ctx.chat.id, resp, {});
+});
+
 bot.command("loser", ctx => {
     var resp = "Jij ja.";
     bot.telegram.sendMessage(ctx.chat.id, resp, {});
