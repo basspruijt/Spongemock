@@ -26,7 +26,7 @@ bot.command("spongemock" , ctx => {
 
 function mock(ctx) {
     console.log(ctx.from);
-    console.log("Sent by: " + ctx.from.first_name + " // " + ctx.from.username);
+    console.log("Sent by: " + ctx.from.first_name + " " + ctx.from.last_name + " // " + ctx.from.username);
 
     var mockStart = ctx.message.text.indexOf(' ');
 
