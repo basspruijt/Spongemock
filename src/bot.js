@@ -1,6 +1,6 @@
 const { Telegraf } = require("telegraf");
 
-const token = "2065000283:AAGRq1ObTlb2NM-ObUVBL2438zjKXhklf2c";
+const { token } = require("../token/token.js");
 
 const bot = new Telegraf(token);
 
@@ -54,8 +54,7 @@ function mockContext(ctx) {
     return str;
 };
 
-function mockString(str = "Someone fucked up") {
-
+function mockString(str = "Someone fucked up.") {
     const sponge = "\u{1F9FD}";
 
     var split = str.toLowerCase().split("");
