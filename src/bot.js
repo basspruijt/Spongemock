@@ -1,8 +1,35 @@
 const { Telegraf } = require("telegraf");
-
-const { token } = require("../token/token.js");
+const { token } = require("../important stuff/token.js");
+const { admins } = require("../important stuff/admins.js");
+const cron = require("node-cron");
 
 const bot = new Telegraf(token);
+
+var cronJobs = [];
+
+bot.command("loesoe", ctx => {
+    var isAdmin = checkAdmin(ctx);
+
+    if (isAdmin && !cronJobs.vars['gaanWeLoesoe' + ctx.chat.id]) {
+        cronJobs.jobs['test' + ctx.chat.id] = cron.schedule("* * * * * *", () => {
+            send(ctx, "We gaan loesoe");
+        });
+        cronJobs.vars['gaanWeLoesoe' + ctx.chat.id] = true;
+        bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
+    } else if (isAdmin && cronJobs.vars['gaanWeLoesoe' + ctx.chat.id] == true) {
+        cronJobs.jobs['test' + ctx.chat.id].stop();
+        cronJobs.vars['gaanWeLoesoe' + ctx.chat.id] = false;
+        bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
+    } else {
+        send(ctx, "You're not allowed to do that.");
+    }
+});
+
+bot.command("info", ctx => {
+    console.log("-----");
+    console.log(cronJobs);
+    console.log("-----");
+});
 
 bot.command("loser", ctx => {
     var resp = "Jij ja.";
@@ -69,7 +96,7 @@ function mockString(str = "Someone fucked up.") {
     resp = sponge.concat(resp).concat(sponge);
     
     return resp;
-}
+};
 
 function send(ctx, resp, a = false, b = false) {
     // resp = text to send
@@ -85,7 +112,29 @@ function send(ctx, resp, a = false, b = false) {
     if (b) {
         bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
     }
-}
+};
+
+function checkAdmin(ctx) {
+    var user = ctx.message.from.id;
+    var isAdmin = false;
+
+    for (i = 0; i < admins.length; i++) {
+        if (user == admins[i]) {
+            isAdmin = true;
+            break;
+        }
+    }
+
+    return isAdmin;
+};
 
 bot.launch();
 console.log("Bot launched");
+
+// SCHEDULING BONES DAY NOTIFICATION
+// cron.schedule("* * * * * *", () => {
+//     if (gaanWeLoesoe) {
+//         console.log("We gaan loesoe");
+//         bot.telegram.sendMessage(-1001707217121, "We gaan LOESOE");
+//     }
+// });
