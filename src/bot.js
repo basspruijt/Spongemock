@@ -6,29 +6,43 @@ const cron = require("node-cron");
 const bot = new Telegraf(token);
 
 var cronJobs = [];
+var cronVars = [];
 
 bot.command("loesoe", ctx => {
     var isAdmin = checkAdmin(ctx);
-
-    if (isAdmin && !cronJobs.vars['gaanWeLoesoe' + ctx.chat.id]) {
-        cronJobs.jobs['test' + ctx.chat.id] = cron.schedule("* * * * * *", () => {
-            send(ctx, "We gaan loesoe");
-        });
-        cronJobs.vars['gaanWeLoesoe' + ctx.chat.id] = true;
-        bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
-    } else if (isAdmin && cronJobs.vars['gaanWeLoesoe' + ctx.chat.id] == true) {
-        cronJobs.jobs['test' + ctx.chat.id].stop();
-        cronJobs.vars['gaanWeLoesoe' + ctx.chat.id] = false;
-        bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
-    } else {
-        send(ctx, "You're not allowed to do that.");
+    if (ctx.chat.id != "-1001498548689") {
+        if (isAdmin && !cronVars['gaanWeLoesoe_' + ctx.chat.id]) {
+            cronJobs['test_' + ctx.chat.id] = cron.schedule("* * * * * *", () => {
+                send(ctx, "We gaan loesoe");
+            });
+            cronVars['gaanWeLoesoe_' + ctx.chat.id] = true;
+            bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
+        } else if (isAdmin && cronVars['gaanWeLoesoe_' + ctx.chat.id] == true) {
+            cronJobs['test_' + ctx.chat.id].stop();
+            cronVars['gaanWeLoesoe_' + ctx.chat.id] = false;
+            bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
+        } else {
+            send(ctx, "You're not allowed to do that.");
+        }
     }
+});
+
+bot.command("test", ctx => {
+    console.log("");
+    console.log("---TESTING---");
+    console.log("-------------");
+
+    console.log(cronJobs);
+    console.log("#############");
+    console.log(cronVars);
 });
 
 bot.command("info", ctx => {
     console.log("-----");
-    console.log(cronJobs);
+    console.log(ctx.message.from);
     console.log("-----");
+    console.log(ctx.chat.id);
+    bot.telegram.deleteMessage(ctx.chat.id, ctx.message.message_id);
 });
 
 bot.command("loser", ctx => {
